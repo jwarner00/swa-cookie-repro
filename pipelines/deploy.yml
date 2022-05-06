@@ -1,26 +1,24 @@
 name: 'deployment Pipeline'
 
+trigger:
+ - none
 
 stages:
 - stage: DeploymentStage
   displayName: Deployment Stage
+  
 
   jobs:
-  - deployment: Deploy
-    displayName: Deploy 
+  - job: Deploy
+  
+    steps:
+      - checkout: self
+        submodules: true
 
-    strategy:
-      runOnce:
-        deploy:
-
-          steps:
-            - checkout: self
-              submodules: true
-
-            - task: AzureStaticWebApp@0
-              inputs:
-                skip_app_build: true
-                api_location: 'api/'
-                app_location: 'src/'
-                azure_static_web_apps_api_token: $(dev_deployment_token)
+      - task: AzureStaticWebApp@0
+        inputs:
+          skip_app_build: true
+          api_location: 'api/'
+          app_location: 'src/'
+          azure_static_web_apps_api_token: $(dev_deployment_token)
 
